@@ -87,9 +87,16 @@ app.get('/watchlist', async (req, res) => {
         }
     };
 
+    let finalResponse = [];
+
     try {
         const results = await Promise.all(symbols.map(fetchQuoteAndProfile));
-        res.json(results);
+        results.forEach(element => {
+            if(element.Name) {
+                finalResponse.push(element);
+            }
+        });
+        res.json(finalResponse);
     } catch (error) {
         console.error('Error processing watchlist:', error);
         res.status(500).send('Error processing watchlist');
