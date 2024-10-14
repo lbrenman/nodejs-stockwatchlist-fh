@@ -54,10 +54,19 @@ app.get('/quote', async (req, res) => {
             Name: stockProfile.name
         }
 
-        res.status(200).send(quoteResponseBody);
+        if(stockProfile.name) {
+            res.status(200).send(quoteResponseBody);
+        } else {
+            res.status(204).send({});
+        }
+
+        
     } catch (error) {
         console.error('Error fetching data:', error);
-        res.status(500).send('Error fetching data');
+        let errorMessage = {
+            message:'Stock server error'
+        }
+        res.status(500).send(errorMessage);
     }
 });
 
@@ -96,10 +105,18 @@ app.get('/watchlist', async (req, res) => {
                 finalResponse.push(element);
             }
         });
-        res.json(finalResponse);
+        if(finalResponse.length >0) {
+            res.status(200).send(finalResponse);
+        } else {
+            res.status(204).send({});
+        }
+        
     } catch (error) {
         console.error('Error processing watchlist:', error);
-        res.status(500).send('Error processing watchlist');
+        let errorMessage = {
+            message:'Stock server error'
+        }
+        res.status(500).send(errorMessage);
     }
 });
 
