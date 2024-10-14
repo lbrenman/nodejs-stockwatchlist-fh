@@ -4,7 +4,7 @@ Stock Watchlist API built in NodeJS/Express
 
 Uses API Key Authentication
 
-Add a .env file to your NodeJS project to contain your API Key list and MongoDB username and password
+Add a .env file to your NodeJS project to contain your API Key and Finnhub.io API Key
 
 ```
 FINNHUBAPIKEY={{Your finnhub.io API Key}}
@@ -32,4 +32,32 @@ with response:
     "Symbol": "INTC",
     "Name": "Intel Corp"
 }
+```
+
+## Get Watchlist
+
+```bash
+curl --location '{{BASEURL}}/watchlist?symbols=intc,aapl' \
+--header 'x-api-key: {{API KEY}}
+```
+
+with response:
+
+```json
+[
+    {
+        "Price": 23.56,
+        "Change": 0.34,
+        "ChangePercent": 1.4643,
+        "Symbol": "INTC",
+        "Name": "Intel Corp"
+    },
+    {
+        "Price": 227.55,
+        "Change": -1.49,
+        "ChangePercent": -0.6505,
+        "Symbol": "AAPL",
+        "Name": "Apple Inc"
+    }
+]
 ```

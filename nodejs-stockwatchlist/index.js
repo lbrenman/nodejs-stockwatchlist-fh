@@ -18,9 +18,10 @@ const apiKeyMiddleware = (req, res, next) => {
 
 app.use(apiKeyMiddleware);
 
+const apiKey = process.env.FINNHUBAPIKEY;
+
 app.get('/quote', async (req, res) => {
     const symbol = req.query.symbol;
-    const apiKey = process.env.FINNHUBAPIKEY;
     const quoteUrl = `https://finnhub.io/api/v1/quote?symbol=${symbol}`;
     const profileUrl = `https://finnhub.io/api/v1/stock/profile2?symbol=${symbol}`;
     
@@ -57,6 +58,41 @@ app.get('/quote', async (req, res) => {
     } catch (error) {
         console.error('Error fetching data:', error);
         res.status(500).send('Error fetching data');
+    }
+});
+
+app.get('/watchlist', async (req, res) => {
+    const symbols = req.query.symbols.split(',');
+    
+
+    const fetchQuoteAndProfile = async (symbol) => {
+        const quoteUrl = `https://finnhub.io/api/v1/quote?symbol=${symbol}`;
+        const profileUrl = `https://finnhub.io/api/v1/stock/profile2?symbol=${symbol}`;
+        
+        try {
+            const [quoteResponse, profileResponse] = await Promise.all([
+                axios.get(quoteUrl, { headers: { 'X-Finnhub-Token': apiKey } }),
+                axios.get(profileUrl, { headers: { 'X-Finnhub-Token': apiKey } })
+            ]);
+            return {
+                Price: quoteResponse.data.c,
+                Change:quoteResponse.data.d,
+                ChangePercent: quoteResponse.data.dp,
+                Symbol: profileResponse.data.ticker,
+                Name: profileResponse.data.name
+            };
+        } catch (error) {
+            console.error(`Error fetching data for ${symbol}:`, error);
+            return { symbol, error: 'Error fetching data' };
+        }
+    };
+
+    try {
+        const results = await Promise.all(symbols.map(fetchQuoteAndProfile));
+        res.json(results);
+    } catch (error) {
+        console.error('Error processing watchlist:', error);
+        res.status(500).send('Error processing watchlist');
     }
 });
 
