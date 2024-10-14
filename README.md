@@ -17,3 +17,19 @@ USER_API_KEY={{API Key for client calls}}
 curl --location '{{BASEURL}}/quote?symbol=intc' \
 --header 'x-api-key: {{API KEY}}
 ```
+
+with response:
+
+```json
+{
+    "Price": 23.56,
+    "Change": 0.34,
+    "ChangePercent": 1.4643,
+    "DayHigh": 23.82,
+    "DayLow": 22.98,
+    "OpenPrice": 23.05,
+    "PreviousClose": 23.22,
+    "Symbol": "INTC",
+    "Name": "Intel Corp"
+}
+```
