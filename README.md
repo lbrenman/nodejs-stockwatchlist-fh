@@ -1,6 +1,6 @@
 # Stock Watchlist API
 
-Stock Watchlist API built in NodeJS/Express
+Stock Watchlist API built in NodeJS/Express using Finnhub.io
 
 Uses API Key Authentication
 
